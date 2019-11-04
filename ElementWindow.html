@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <style>
+        /*CSS
+*/
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+        }
+
+        :root {
+            --global-variable: 100px;
+        }
+
+        #id {
+            width: calc(var(--global-variable) - 20px);
+        }
+
+        .class {
+
+        }
+        .class > div{
+
+        }
+        .inline {
+        display:inline-block;
+        margin-right:5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HTML-->
+    <div class="class" id="id">
+        <div>  
+
+<label for="tempt">Annotation:</label><br> <input id= "tempt" type="text" name="Element1" value="" placeholder="Ort">
+<input type="text" name="Element2" value="" placeholder="Name"> <br>
+<input type="text" name="Element2" value="" placeholder="Hover Ansicht"><br>
+<input type="button" class="inline" id="Hinzufügen">Hinzufügen</input>
+<input type="button" class="inline" id="Löschen">Löschen</input>
+
+</form>
+        </div>
+    </div>
+
+    <script>
+        // javascript
+    </script>
+</body>
+
+</html>
