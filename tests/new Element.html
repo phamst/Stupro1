@@ -1,0 +1,136 @@
+<html>
+
+<head>
+    <title>new Element</title>
+    <style>
+        :root {
+            --popupContent-width: 220px;
+            --popupContent-height: calc(var(--popupContent-width) * 1.25);
+        }
+
+        html,
+        body {
+            width: inherit;
+            height: inherit;
+            background-color: white;
+        }
+
+
+        .popup {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            padding-top: 150px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+
+
+        .popupContent {
+            position: relative;
+            width: var(--popupContent-width);
+            height: var(--popupContent-height);
+            background-color: rgba(255, 255, 255, 0.603);
+            margin: 0 auto;
+            align-items: center;
+            text-align: center;
+            padding: .1% .7%;
+
+            -webkit-box-shadow: 4px 3px 6px 0px rgba(0, 0, 0, 0.64);
+            box-shadow: 4px 3px 6px 0px rgba(0, 0, 0, 0.64);
+        }
+
+        #title {
+            margin: 6% auto;
+            padding-bottom: 10%;
+            width: 90%;
+            border-bottom: 2px solid black;
+        }
+
+        .popupContent>div {
+            margin: 0 auto;
+            margin-top: 10%;
+            align-self: bottom;
+            width: 90%;
+            text-align: left;
+        }
+        .popupContent>span{
+            
+        }
+
+        .popupContent>div>input {
+            width: 100%;
+            margin-top: 7%;
+        }
+
+        .popupContent>div>input[type="color"] {
+            margin-top: 4%;
+            padding: 0;
+            background-color: transparent;
+        }
+
+        .popupContent>div>input[type="text"]:focus {
+            -moz-box-shadow: 0px 0px 2px 0px rgb(71, 165, 209);
+            -webkit-box-shadow: 0px 0px 2px 0px rgb(71, 165, 209);
+            box-shadow: 0px 0px 2px 0px rgb(71, 165, 209);
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: -10px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="document.getElementById('popup').style.display='block'">popup</button>
+    <div class="popup" id="popup">
+        <div class="popupContent">
+            <span class="close" onclick="document.getElementById('popup').style.display ='none'">&times;</span>
+            <h1 id="title">Create new Extraction</h1>
+            <div>
+                <label for="exttractionColor"><b>Color:</b></label><br>
+                <input id="exttractionColor" type="color"
+                    onchange="document.getElementById('title').style.borderBottomColor = document.getElementById('exttractionColor').value">
+                <br>
+                <input id="extractionType" type="text" placeholder="extracted Type">
+                <br>
+                <input id="extractionValue" type="text" placeholder="Value">
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('popup')) {
+                document.getElementById('popup').style.display = "none";
+            }
+        } </script>
+</body>
+
+</html>
