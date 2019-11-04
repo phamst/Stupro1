@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 30px;
+            background-color: #f0f0f0;
+        }
+
+        .container,
+        .backdrop,
+        textarea {
+            width: 460px;
+            height: 180px;
+        }
+
+        .highlights,
+        textarea {
+            padding: 10px;
+            font: 20px/28px 'Open Sans', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            display: block;
+            margin: 0 auto;
+            transform: translateZ(0);
+            -webkit-text-size-adjust: none;
+        }
+
+        .backdrop {
+            position: absolute;
+            z-index: 2;
+            border: 2px solid #685972;
+            background-color: transparent;
+            overflow-x: hidden;
+            pointer-events: none;
+            transition: transform 1s;
+        }
+
+        .highlights {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: transparent;
+        }
+
+        textarea {
+            display: block;
+            position: absolute;
+            z-index: 1;
+            margin: 0;
+            border: 2px solid #74637f;
+            border-radius: 0;
+            color: #444;
+            background-color: transparent;
+            overflow: auto;
+            resize: none;
+            transition: transform 1s;
+        }
+
+        mark {
+            border-radius: 3px;
+            color: #444;
+            background-color: #b1d5e5;
+            pointer-events: all
+        }
+
+       mark:hover {
+            color: green;
+        }
+
+        button {
+            display: block;
+            width: 300px;
+            margin: 30px auto 0;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            background-color: #74637f;
+            font: 18px 'Opens Sans', sans-serif;
+            letter-spacing: 1px;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .perspective textarea {
+            transform:
+                perspective(1500px) translateX(-125px) rotateY(45deg) scale(.9);
+        }
+
+        .perspective .backdrop {
+            transform:
+                perspective(1500px) translateX(155px) rotateY(45deg) scale(1.1);
+        }
+
+        textarea:focus,
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #c6aada;
+        }
+    </style>
+    <style>
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 0 solid transparent;
+        }
+
+        .tooltip ttt {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip ttt::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border: 5px solid transparent;
+            border-top-color: #555;
+        }
+
+        .tooltip:hover ttt {
+            visibility: visible;
+            opacity: 1;
+            overflow: visible;
+            display: block; /*hinz.gef*/
+            clear: both;
+        }
+
+    </style>
+</head>
+
+
+<body>
+    <div class="container" id="c">
+        <div class="backdrop" id="b">
+            <div class="highlights" id="h"></div>
+        </div>
+        <textarea
+            id="t">This demo shows how to highlight bits of text within a textarea. Alright, that's a lie. You can't actually render markup inside a textarea. However, you can fake it by carefully positioning a div behind the textarea and adding your highlight markup there. JavaScript takes care of syncing the content and scroll position from the textarea to the div, so everything lines up nicely. Hit the toggle button to peek behind the curtain. And feel free to edit this text. All capitalized words will be highlighted.</textarea>
+    </div>
+    <button id="btn">Toggle Perspective</button>
+
+    <script>
+        var $container = document.getElementById('c');
+        var $backdrop = document.getElementById('b');
+        var $highlights = document.getElementById('h');
+        var $textarea = document.getElementById('t')
+        var $toggle = document.getElementById('btn');
+
+        // yeah, browser sniffing sucks, but there are browser-specific quirks to handle that are not a matter of feature detection
+        var ua = window.navigator.userAgent.toLowerCase();
+        var isIE = !!ua.match(/msie|trident\/7|edge/);
+        var isWinPhone = ua.indexOf('windows phone') !== -1;
+        var isIOS = !isWinPhone && !!ua.match(/ipad|iphone|ipod/);
+
+        function applyHighlights(text) {
+            text = text
+                .replace(/\n$/g, '\n\n')
+                .replace(/\S+a\S+/g, '<mark class="tooltip">$&<ttt>tooltiptext</ttt></mark>');
+
+            if (isIE) {
+                // IE wraps whitespace differently in a div vs textarea, this fixes it
+                text = text.replace(/ /g, ' <wbr>');
+            }
+
+            return text;
+        }
+
+        function handleInput() {
+            var text = $textarea.textContent;
+            var highlightedText = applyHighlights(text);
+            $highlights.innerHTML = highlightedText;
+        }
+
+        function handleScroll() {
+            var scrollTop = $textarea.scrollTop;
+            var scrollLeft = $textarea.scrollLeft;
+            //console.log("left: " + scrollLeft + " top: " + scrollTop);
+            $backdrop.scrollTop = scrollTop;
+
+
+            $backdrop.scrollLeft = scrollLeft;
+        }
+
+        function fixIOS() {
+            // iOS adds 3px of (unremovable) padding to the left and right of a textarea, so adjust highlights div to match
+            $highlights.css({
+                'padding-left': '+=3px',
+                'padding-right': '+=3px'
+            });
+        }
+
+        function bindEvents() {           
+            $textarea.addEventListener("scroll", handleScroll);
+            $textarea.addEventListener("input", handleInput);
+
+            $toggle.addEventListener("click", function () {
+                $container.classList.toggle('perspective');
+            });
+
+        }
+
+        if (isIOS) {
+            fixIOS();
+        }
+
+        bindEvents();
+        handleInput();
+
+
+    </script>
+</body>
+
+</html>

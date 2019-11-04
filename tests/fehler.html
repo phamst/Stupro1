@@ -1,0 +1,177 @@
+<html>
+
+<head>
+    <title>Feher
+    </title>
+</head>
+<style>
+    :root {
+        --ellements-cont-height: 400px;
+        --ellements-cont-width: 325px;
+        --ext-element-width: calc(var(--ellements-cont-width) - 25px);
+        --ext-element-height: calc(var(--ext-element-width)/5);
+    }
+
+
+    extractedElement {
+        width: var(--ext-element-width);
+        height: var(--ext-element-height);
+        line-height: var(--ext-element-height);
+
+        display: flex;
+        flex-direction: row;
+        border: 1.5px solid black;
+        border-top-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        overflow: hidden;
+        margin-bottom: .5%;
+    }
+
+    extractedElement>input[type="checkbox"] {
+        margin-right: 4px;
+        background-color: red;
+        color: red;
+        cursor: pointer;
+    }
+
+    extractedElement>data {
+        flex-grow: 1;
+        display: flex;
+        text-align: center;
+
+    }
+
+    extractedElement>data>p {
+        line-height: inherit;
+        flex-grow: 1;
+        text-align: center;
+        margin: 0;
+        padding: 0 4px;
+        font-weight: bold;
+    }
+
+    extractedElement>data>input {
+        width: 100%;
+        flex-grow: 4;
+        padding: 2% 1.5%;
+        margin: 3% 0;
+        overflow: scroll;
+        border: transparent;
+        background-color: rgba(245, 245, 245, 0.39);
+        font-size: inherit;
+    }
+
+    extractedElement>.delete {
+        font-weight: bold;
+        height: 100%;
+        padding: 0 5px;
+        width: min-content;
+        line-height: inherit;
+        color: rgba(241, 60, 60, 0.9);
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    extractedElement>.delete:hover {
+        color: rgb(163, 4, 4);
+        font-weight: bolder;
+    }
+</style>
+<style>
+    .extractedElementsContainer {
+        height: var(--ellements-cont-height);
+        width: var(--ellements-cont-width);
+        background-color: rgba(231, 230, 230, 0.4);
+        overflow-y: scroll;
+        position: relative;
+    }
+
+    #elementsList {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #btnCreateExtractedElement {
+        width: 325px;
+        height: min-content;
+        order: 1;
+        text-align: center;
+        line-height: 100%;
+        font-size: x-large;
+        font-weight: bolder;
+        padding-bottom: 4px;
+        color: green;
+        border: 2px solid black;
+        background-color: transparent;
+    }
+</style>
+
+<body>
+    <div class="extractedElementsContainer">
+        <div id="elementsList"></div>
+    </div>
+    <button id="btnCreateExtractedElement" onclick="addElement(this)">+</button>
+
+    <script>
+        function createExtractedElement(color, extractedType, extractedVal, parent) {
+            var exEl = document.createElement('extractedElement');
+            exEl.style.backgroundColor = color;
+
+            var cbx = document.createElement('input');
+            cbx.type = "checkbox";
+
+            var data = document.createElement('data');
+
+            var pExtractedType = document.createElement('p');
+            pExtractedType.innerText = extractedType;
+
+            var inp = document.createElement('input');
+            inp.type = "text";
+            inp.value = extractedVal;
+
+            var del = document.createElement('div');
+            del.classList.add('delete');
+            del.innerText = "X";
+            del.addEventListener("click", this.remove);
+
+            data.appendChild(pExtractedType);
+            data.appendChild(inp);
+
+
+            exEl.appendChild(cbx);
+            exEl.appendChild(data);
+            exEl.appendChild(del);
+
+            parent.appendChild(exEl);
+        }
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function addElement(x) {
+            createExtractedElement(getRandomColor(), "extraktor", "What was Extracted", document.getElementById('elementsList'));
+        }
+
+        function remove(event){
+            var childs = document.getElementById('elementsList').children;
+            for(var i in childs){
+                if(event.target.parentElement == childs[i]){
+                    event.target.parentElement.remove();
+                }
+            }
+        } 
+        function marked(){
+
+        }
+
+    </script>
+</body>
+
+</html>
